@@ -42,7 +42,6 @@ def show():
             errors="ignore"
             )
         
-        st.write(X_test.columns.tolist())
         # Ensure same feature order as training
         feature_order = [
                 'POSTED_BY',
@@ -70,7 +69,7 @@ def show():
 
             st.success("Prediction Complete")
 
-            st.dataframe(df.head())
+            st.dataframe(df)
 
             st.download_button(
                 "Download Predictions",
