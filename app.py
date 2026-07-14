@@ -1,58 +1,95 @@
-
 import streamlit as st
-import pandas as pd
-import joblib
+from streamlit_option_menu import option_menu
 
-# Load model and scaler
-model = joblib.load("GradientBoostingTuned.pkl")
-scaler = joblib.load("feature_scaler.pkl")
+import Prediction
+import Batch_Prediction
 
-st.title("House Price Prediction (in Lacs)")
 
-posted_by = st.selectbox("Posted By", ["Owner", "Dealer", "Builder"])
-bhk_no = st.number_input("BHK Number", 1, 10, 2)
-bhk_or_rk = st.selectbox("BHK or RK", ["BHK", "RK"])
-sqft = st.number_input("Square Feet", 200, 10000, 1200)
 
-under_construction = st.selectbox("Under Construction", [0, 1])
-rera = st.selectbox("RERA Approved", [0, 1])
-ready_to_move = st.selectbox("Ready To Move", [0, 1])
-resale = st.selectbox("Resale", [0, 1])
+st.set_page_config(
+    page_title="Property Price Predictor",
+    page_icon="🏠",
+    layout="wide"
+)
+st.image("Designer.png")
 
-longitude = st.number_input("Longitude", format="%.6f")
-latitude = st.number_input("Latitude", format="%.6f")
+with st.sidebar:
 
-if st.button("Predict Price"):
+    st.image("Designer.png")
 
-    # Same encoding used in notebook
-    posted_by_map = {
-        "Owner": 0,
-        "Dealer": 1,
-        "Builder": 2
-    }
+    selected = option_menu(
+        menu_title="Property Price Predictor",
+        options=[
+            "Home",
+            "Price Prediction",
+            "Batch Prediction"
+        ],
+        icons=[
+            "house-fill",
+            "currency-rupee",
+            "file-earmark-spreadsheet"
+        ],
+        menu_icon="building",
+        default_index=0
+    )
 
-    bhk_or_rk_map = {
-        "BHK": 0,
-        "RK": 1
-    }
+if selected == "Home":
+    
+    st.write("")
+    tab1,tab2,tab3 = st.tabs(
+    ["Overview","Methodology","Author"]
+    )
 
-    input_df = pd.DataFrame({
-        "POSTED_BY": [posted_by_map[posted_by]],
-        "UNDER_CONSTRUCTION": [under_construction],
-        "RERA": [rera],
-        "BHK_NO.": [bhk_no],
-        "BHK_OR_RK": [bhk_or_rk_map[bhk_or_rk]],
-        "SQUARE_FT": [sqft],
-        "READY_TO_MOVE": [ready_to_move],
-        "RESALE": [resale],
-        "LONGITUDE": [longitude],
-        "LATITUDE": [latitude]
-    })
+    with tab1:
 
-    # Apply same scaling as training
-    input_scaled = scaler.transform(input_df)
+        st.markdown("""
+        ### Project Overview
 
-    # Prediction
-    prediction = model.predict(input_scaled)[0]
+        Predict residential property prices using
+        Machine Learning models.
 
-    st.success(f"Predicted Price: ₹ {prediction:.2f} Lacs")
+        Features:
+
+        - Single Prediction
+        - Batch Prediction
+        - Model Analytics
+        - Performance Dashboard
+        """)
+
+    with tab2:
+
+        st.markdown("""
+        ### Methodology
+
+        1. Data Collection
+        2. Data Cleaning
+        3. EDA
+        4. Feature Engineering
+        5. Scaling
+        6. Model Training
+        7. Hyperparameter Tuning
+        8. Deployment
+        """)
+
+    with tab3:
+
+        st.markdown("""
+        ### Author
+
+        Brijesh Singh
+
+        PG Diploma DSML
+
+        Email:
+        brijesh.singh@aol.com
+        """)
+
+elif selected == "Price Prediction":
+    Prediction.show()
+
+elif selected == "Batch Prediction":
+    Batch_Prediction.show()
+
+
+
+

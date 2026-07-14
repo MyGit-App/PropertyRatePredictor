@@ -11,3 +11,4 @@ xgboost
 CatBoost
 lightgbm
 scipy
+streamlit-option-menu
